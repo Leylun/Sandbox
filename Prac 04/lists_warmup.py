@@ -1,3 +1,8 @@
+"""
+CP1404/CP5632 Practical
+Code for List_Warm-up (Questions and Answers)
+"""
+
 numbers = [3, 1, 4, 1, 5, 9, 2]
 '''
 Questions
