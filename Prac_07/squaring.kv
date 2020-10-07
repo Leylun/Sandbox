@@ -1,0 +1,28 @@
+BoxLayout:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        TextInput:
+            id: input_number
+            text: '7'
+            font_size: 48
+            multiline: False
+            width: 100
+        Button:
+            text: 'Square'
+            width: 100
+            # the following line specifies the function in the app class to call when the button is pressed
+            on_press: app.handle_calculate(int(input_number.text))
+        Label:
+            id: output_label
+            font_size: 48
+            width: 100
+            color: (100, 255, 140, 1) # (255, 192, 203, 1) for pink didn't work for some reason.
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: text_1
+            font_size: 30
+            color: (100, 100, 100, 1)
+            size_hint: 1, 1
+            text: 'Enter a number and press "Square"'

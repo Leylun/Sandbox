@@ -1,0 +1,29 @@
+BoxLayout:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        TextInput:
+            id: number_input
+            text: '34'
+            font_size: 48
+            multiline: False
+            on_text: app.to_kilometers(number_input.text)
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                id: Up_Button
+                text: 'Up'
+                on_press: app.value_change(number_input.text, 1)
+            Button:
+                id: Down_Button
+                text: 'Down'
+                on_press: app.value_change(number_input.text, -1)
+#    Button:
+#        id: Convert_Button
+#        text: 'Convert Miles to Kilometers'
+#        font_size: 12
+#        multiline: False
+#        on_press: app.to_kilometers(number_input.text)
+    Label:
+        id: Converted_Value
+        text: str(54.717)
