@@ -1,6 +1,6 @@
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.button import Label
+from kivy.uix.button import Button
 from kivy.properties import StringProperty
 from CP1404_Assignment_2.PlaceCollection import PlaceCollection
 
@@ -9,16 +9,14 @@ from CP1404_Assignment_2.PlaceCollection import PlaceCollection
 #   it is very important.
 
 class Travel_Tracker(App):
-    status_text = StringProperty()
+    current_widgets = []
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(Travel_Tracker, self).__init__(**kwargs)
         self.root = Builder.load_file("Travel_Tracker_GUI.kv")
         self.title = "Travel_Tracker V2"
         self.collection = PlaceCollection()
         self.place_objects = self.collection.load_places()
-        # for thing in place_objects:
-        #     print(thing)
 
     def build(self):
         self.make_widget()
@@ -26,21 +24,53 @@ class Travel_Tracker(App):
 
     def make_widget(self):
         for name in self.place_objects:
-            temp_lab = Label(text=str(name), id=str(name))
-            # temp_lab.bind(on_release=self.enter_wid)
-            self.root.ids.location_box.add_widget(temp_lab)
-
-    # def enter_wid(self, instance):
-    #     name = instance.id
-    #     self.status_text = "{}'s number is {}".format(name, self.place_objects[name])
+            temp_but = Button(text=str(name), id=str(name))
+            # temp_but.bind(on_press=lambda x: self.to_visited(name))
+            temp_but.bind(on_press=lambda temp_but: self.toggle_visited(temp_but.text))
+            self.root.ids.location_box.add_widget(temp_but)
+            self.current_widgets.append(temp_but)
 
     def switch_sort(self):
-        # Toggle switch for sort_types in switch_types
+        # //Toggle switch for sort_types in switch_types
         switch_types = ["Visited", "Priority"]
         switch_val = switch_types.index(str(self.root.ids.switch_button.text)) + 1
         print(switch_val)
         self.root.ids.switch_button.text = switch_types[switch_val] if switch_val < len(switch_types) \
             else switch_types[0]
+
+    def clear_inputs(self):
+        # //Function to clear inputs, loop for ease of improvement
+        root_ids = ['name_input', 'country_input', 'priority_input']
+        for ids in root_ids:
+            self.root.ids.ids.text = ""
+
+    def add_place(self):
+        data_input = []
+        root_ids = ['name_input', 'country_input', 'priority_input']
+        for ids in root_ids:
+            data_input.append(self.root.ids.ids.text)
+        self.collection.add_place(data_input[0], data_input[1], data_input[2])
+        self.place_objects = self.collection.load_places()
+        self.clear_widget()
+        self.make_widget()
+
+    def clear_widget(self):
+        # method to clear widgets, resets current widgets to prevent computation lag at higher numbers
+        for widget in self.current_widgets:
+            self.root.ids.location_box.remove_widget(widget)
+        self.current_widgets = []
+
+    def toggle_visited(self, given_name):
+        # method to turn place objects visited or unvisited
+        for the_place in self.place_objects:
+            if given_name == str(the_place):
+                the_place.tog_visited()
+                if the_place.visited:
+                    self.root.ids.visited_label.text = "You visited {}".format(the_place.name)
+                elif not the_place.visited:
+                    self.root.ids.visited_label.text = "You need to visit {}".format(the_place.name)
+            self.clear_widget()
+        self.make_widget()
 
 
 Travel_Tracker().run()

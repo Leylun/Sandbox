@@ -13,3 +13,9 @@ class place:
             return "{} in {}, priority {} (visited)".format(self.name, self.country, self.priority)
         elif not self.visited:
             return "{} in {}, priority {}".format(self.name, self.country, self.priority)
+
+    def tog_visited(self):
+        if self.visited:
+            self.visited = False
+        elif not self.visited:
+            self.visited = True
