@@ -8,6 +8,9 @@ class place:
         if self.priority <= 2:
             self.important = True
 
+    def __getitem__(self, item):
+        return getattr(self, item)
+
     def __str__(self):
         if self.visited:
             return "{} in {}, priority {} (visited)".format(self.name, self.country, self.priority)

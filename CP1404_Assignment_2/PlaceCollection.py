@@ -11,6 +11,21 @@ def save_places(current_places):
     return True
 
 
+def sorting_algorithm(sorting_list):
+    sorted_list = []
+    for the_place in sorting_list:
+        sorted_list.append(the_place['priority'])
+    sorted_list.sort()
+    list_index = 0
+    for value in sorted_list:
+        for the_place in sorting_list:
+            if value == the_place['priority']:
+                # print(sorting_list[sorting_list.index(the_place)])
+                sorted_list[list_index] = sorting_list[list_index]
+                list_index += 1
+    return sorted_list
+
+
 class PlaceCollection:
     list_places = []
 
@@ -28,15 +43,32 @@ class PlaceCollection:
     def load_places(self):
         return self.list_places
 
-    def place_sort(self):
-        print()
+    def place_sort(self, given_order):
+        # // Switch order based on function argument
+        # TODO: Stops working at high number of locations: Figure out later.
+        if given_order == "Priority":
+            self.list_places = sorting_algorithm(self.list_places)
+            return self.list_places
+        elif given_order == "Visited":
+            visited_list = []
+            unvisited_list = []
+            for places in self.list_places:
+                if places['visited']:
+                    visited_list.append(places)
+            visited_list = sorting_algorithm(visited_list)
+            for places in self.list_places:
+                if not places['visited']:
+                    unvisited_list.append(places)
+            unvisited_list = sorting_algorithm(unvisited_list)
+            self.list_places = visited_list + unvisited_list
+            return self.list_places
 
     def add_place(self, name, country, priority):
         new_place = [name, country]
         for part in new_place:
             try:
                 int(part)
-            except TypeError:
+            except ValueError:
                 pass
             else:
                 return False
@@ -44,10 +76,10 @@ class PlaceCollection:
                 return False
         try:
             int(priority)
-        except TypeError:
+        except ValueError:
             return False
         else:
-            pass
-        if priority < 1:
-            return False
-        return self.list_places.append(place(name, country, priority, False))
+            priority = int(priority)
+            if priority < 1:
+                return False
+            return self.list_places.append(place(name, country, priority, False))
