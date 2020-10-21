@@ -5,9 +5,6 @@ from CP1404_Assignment_2.PlaceCollection import PlaceCollection
 from kivy.properties import ListProperty
 
 
-# TODO: Make sure to do the Project Reflection: (https://github.com/cp1404-students/travel-tracker-assignment-2-Leylun)
-#   it is very important.
-
 class Travel_Tracker(App):
     current_widgets = []
     switch_types = ListProperty()
@@ -96,8 +93,7 @@ class Travel_Tracker(App):
         self.make_widget()
     
     def on_stop(self):
-        # TODO: call the PlaceCollection Class to save the files, use the place_objects list for this
-        print("I_stopped")
+        self.collection.save_places(self.place_objects)
 
 
 Travel_Tracker().run()

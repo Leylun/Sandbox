@@ -2,15 +2,6 @@ from CP1404_Assignment_2.place import place
 import csv
 
 
-def save_places(current_places):
-    # //Save given data into the csv file
-    with open("places.csv", "w", newline="") as file_places:
-        places = csv.writer(file_places)
-        for location in current_places:
-            places.writerow(location)
-    return True
-
-
 def sorting_algorithm(sorting_list, sorting_type):
     sorted_list = []
     for the_place in sorting_list:
@@ -90,3 +81,13 @@ class PlaceCollection:
                 return "Priority must be > 0"
             self.list_places.append(place(name, country, priority, False))
             return str(self.list_places[-1]) + " added"
+
+    def save_places(self, current_places):
+        # //Save given data into the csv file
+        with open("places.csv", "w", newline="") as file_places:
+            places = csv.writer(file_places)
+            visited = 'v'
+            for location in current_places:
+                if not location['visited']:
+                    visited = 'n'
+                places.writerow([location['name'], location['country'], location['priority'], visited])
