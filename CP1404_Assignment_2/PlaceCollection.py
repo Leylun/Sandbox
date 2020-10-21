@@ -11,15 +11,15 @@ def save_places(current_places):
     return True
 
 
-def sorting_algorithm(sorting_list):
+def sorting_algorithm(sorting_list, sorting_type):
     sorted_list = []
     for the_place in sorting_list:
-        sorted_list.append(the_place['priority'])
+        sorted_list.append(the_place[sorting_type])
     sorted_list.sort()
     list_index = 0
     for value in sorted_list:
         for the_place in sorting_list:
-            if value == the_place['priority']:
+            if value == the_place[sorting_type]:
                 sorted_list[list_index] = sorting_list[sorting_list.index(the_place)]
                 list_index += 1
     return sorted_list
@@ -43,11 +43,9 @@ class PlaceCollection:
         return self.list_places
 
     def place_sort(self, given_order):
-        print("Sort Fired")
         # // Switch order based on function argument
-        # TODO: Stops working at high number of locations: Figure out later.
         if given_order == "Priority":
-            self.list_places = sorting_algorithm(self.list_places)
+            self.list_places = sorting_algorithm(self.list_places, 'priority')
             return self.list_places
         elif given_order == "Visited":
             visited_list = []
@@ -55,13 +53,19 @@ class PlaceCollection:
             for places in self.list_places:
                 if places['visited']:
                     visited_list.append(places)
-            visited_list = sorting_algorithm(visited_list)
+            visited_list = sorting_algorithm(visited_list, 'priority')
             for places in self.list_places:
                 if not places['visited']:
                     unvisited_list.append(places)
-            unvisited_list = sorting_algorithm(unvisited_list)
+            unvisited_list = sorting_algorithm(unvisited_list, 'priority')
             self.list_places = visited_list + unvisited_list
+        elif given_order == "Country":
+            self.list_places = sorting_algorithm(self.list_places, 'country')
             return self.list_places
+        elif given_order == "Name":
+            self.list_places = sorting_algorithm(self.list_places, 'name')
+            return self.list_places
+        return self.list_places
 
     def add_place(self, name, country, priority):
         new_place = [name, country]
@@ -71,15 +75,18 @@ class PlaceCollection:
             except ValueError:
                 pass
             else:
-                return False
+                return "All fields must be completed"
             if part == "":
-                return False
+                return "All fields must be completed"
+        if priority == "":
+            return "All fields must be completed"
         try:
             int(priority)
         except ValueError:
-            return False
+            return "Please enter a valid number"
         else:
             priority = int(priority)
             if priority < 1:
-                return False
-            return self.list_places.append(place(name, country, priority, False))
+                return "Priority must be > 0"
+            self.list_places.append(place(name, country, priority, False))
+            return str(self.list_places[-1]) + " added"

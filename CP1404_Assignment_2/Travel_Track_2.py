@@ -1,8 +1,8 @@
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.button import Button
-from kivy.properties import StringProperty
 from CP1404_Assignment_2.PlaceCollection import PlaceCollection
+from kivy.properties import ListProperty
 
 
 # TODO: Make sure to do the Project Reflection: (https://github.com/cp1404-students/travel-tracker-assignment-2-Leylun)
@@ -10,11 +10,15 @@ from CP1404_Assignment_2.PlaceCollection import PlaceCollection
 
 class Travel_Tracker(App):
     current_widgets = []
+    switch_types = ListProperty()
 
     def __init__(self, **kwargs):
         super(Travel_Tracker, self).__init__(**kwargs)
         self.root = Builder.load_file("Travel_Tracker_GUI.kv")
         self.title = "Travel_Tracker V2"
+        self.switch_types = ["Visited", "Priority", "Country", "Name"]
+        self.current_type = self.switch_types[0]
+        self.first_run = True
         self.collection = PlaceCollection()
         self.place_objects = self.collection.load_places()
 
@@ -24,6 +28,9 @@ class Travel_Tracker(App):
 
     def make_widget(self):
         unvisited_places = 0
+        if self.first_run:
+            self.switch_sort()
+            self.first_run = False
         for name in self.place_objects:
             temp_but = Button(text=str(name), id=str(name))
             # temp_but.bind(on_press=lambda x: self.to_visited(name))
@@ -39,25 +46,28 @@ class Travel_Tracker(App):
 
     def switch_sort(self):
         # //Toggle switch for sort_types in switch_types
-        switch_types = ["Visited", "Priority"]
-        switch_val = switch_types.index(str(self.root.ids.switch_button.text)) + 1
-        switch_type = switch_types[switch_val] if switch_val < len(switch_types) \
-            else switch_types[0]
-        print(switch_type)
-        self.root.ids.switch_button.text = switch_type
-        self.place_objects = self.collection.place_sort(switch_type)
-        self.clear_widget()
-        self.make_widget()
+        switch_val = self.switch_types.index(str(self.root.ids.switch_button.text))
+        switch_type = self.switch_types[switch_val] if switch_val < len(self.switch_types) \
+            else self.switch_types[0]
+        # self.root.ids.switch_button.text = switch_type
+        self.place_objects = self.collection.place_sort(str(switch_type))
+        if not self.first_run:
+            self.clear_widget()
+            self.make_widget()
 
-    def clear_inputs(self):
+    def clear_inputs(self, clear_label):
         # //Function to clear inputs, loop for ease of improvement
-        root_ids = [self.root.ids.name_input, self.root.ids.country_input, self.root.ids.priority_input]
+        if clear_label:
+            self.root.ids.visited_label.text = ""
+        root_ids = [self.root.ids.name_input, self.root.ids.country_input,
+                    self.root.ids.priority_input]
         for root in root_ids:
             root.text = ""
 
     def add_place(self, name, country, priority):
-        self.collection.add_place(name, country, priority)
+        self.root.ids.visited_label.text = self.collection.add_place(name, country, priority)
         self.place_objects = self.collection.load_places()
+        self.clear_inputs(False)
         self.clear_widget()
         self.make_widget()
 
@@ -73,11 +83,22 @@ class Travel_Tracker(App):
             if given_name == str(the_place):
                 the_place.tog_visited()
                 if the_place.visited:
-                    self.root.ids.visited_label.text = "You visited {}. Great Travelling!".format(the_place.name)
+                    if the_place.important:
+                        self.root.ids.visited_label.text = "You visited {}. Great Travelling!".format(the_place.name)
+                    else:
+                        self.root.ids.visited_label.text = "You visited {}".format(the_place.name)
                 elif not the_place.visited:
-                    self.root.ids.visited_label.text = "You need to visit {}".format(the_place.name)
+                    if the_place.important:
+                        self.root.ids.visited_label.text = "You need to visit {}. Get going!".format(the_place.name)
+                    else:
+                        self.root.ids.visited_label.text = "You need to visit {}".format(the_place.name)
             self.clear_widget()
         self.make_widget()
+    
+    def on_stop(self):
+        # TODO: call the PlaceCollection Class to save the files, use the place_objects list for this
+        print("I_stopped")
 
 
 Travel_Tracker().run()
+
