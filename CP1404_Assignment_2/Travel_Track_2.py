@@ -1,3 +1,9 @@
+"""
+CP1404 Travel_Tracker_2 Assignment 2 - Kivy Project to visually display locations
+Tristan Harrington - tristan.harrington@my.jcu.edu.au
+22/10/2020
+"""
+
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.button import Button
