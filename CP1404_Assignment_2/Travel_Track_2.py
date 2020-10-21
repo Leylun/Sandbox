@@ -98,9 +98,8 @@ class Travel_Tracker(App):
                         self.root.ids.visited_label.text = "You need to visit {}. Get going!".format(the_place.name)
                     else:
                         self.root.ids.visited_label.text = "You need to visit {}".format(the_place.name)
-            self.clear_widget()
+        self.switch_sort()
         self.place_objects = self.collection.load_places()
-        self.make_widget()
     
     def on_stop(self):
         # //Method to save data_entry on program halting

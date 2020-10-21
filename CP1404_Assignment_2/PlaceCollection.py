@@ -54,7 +54,7 @@ class PlaceCollection:
                     unvisited_list.append(places)
             unvisited_list = sorting_algorithm(unvisited_list, 'priority')
 
-            self.list_places = visited_list + unvisited_list
+            self.list_places = unvisited_list + visited_list
 
         elif given_order == "Country":
             self.list_places = sorting_algorithm(self.list_places, 'country')
