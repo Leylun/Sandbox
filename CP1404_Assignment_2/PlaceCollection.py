@@ -3,6 +3,7 @@ import csv
 
 
 def sorting_algorithm(sorting_list, sorting_type):
+    # //Function for sorting a given list (two stage sort)
     sorted_list = []
     for the_place in sorting_list:
         sorted_list.append(the_place[sorting_type])
@@ -20,7 +21,7 @@ class PlaceCollection:
     list_places = []
 
     def __init__(self):
-        # //Get data from csv file into class objects
+        # //Method to get data from csv file into class objects
         with open("places.csv", "r", newline="") as file_places:
             places = list(csv.reader(file_places))
         for location in places:
@@ -34,31 +35,38 @@ class PlaceCollection:
         return self.list_places
 
     def place_sort(self, given_order):
-        # // Switch order based on function argument
+        # //Method for sorting list with different type, (sorting type based on given_order)
         if given_order == "Priority":
             self.list_places = sorting_algorithm(self.list_places, 'priority')
             return self.list_places
         elif given_order == "Visited":
             visited_list = []
             unvisited_list = []
+            # //List is split based on visited status for sorting process
+
             for places in self.list_places:
                 if places['visited']:
                     visited_list.append(places)
             visited_list = sorting_algorithm(visited_list, 'priority')
+
             for places in self.list_places:
                 if not places['visited']:
                     unvisited_list.append(places)
             unvisited_list = sorting_algorithm(unvisited_list, 'priority')
+
             self.list_places = visited_list + unvisited_list
+
         elif given_order == "Country":
             self.list_places = sorting_algorithm(self.list_places, 'country')
             return self.list_places
+
         elif given_order == "Name":
             self.list_places = sorting_algorithm(self.list_places, 'name')
             return self.list_places
         return self.list_places
 
     def add_place(self, name, country, priority):
+        # //Method for checking data fields to create class object (returns string to display in label(visited_label))
         new_place = [name, country]
         for part in new_place:
             try:
@@ -83,7 +91,7 @@ class PlaceCollection:
             return str(self.list_places[-1]) + " added"
 
     def save_places(self, current_places):
-        # //Save given data into the csv file
+        # //Method to save given data into the csv file
         with open("places.csv", "w", newline="") as file_places:
             places = csv.writer(file_places)
             visited = 'v'

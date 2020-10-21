@@ -1,5 +1,6 @@
 class place:
     def __init__(self, name, country, priority, visited):
+        # //Method to define variables for class's object
         self.important = False
         self.country = country
         self.name = name
@@ -12,13 +13,8 @@ class place:
         return getattr(self, item)
 
     def __str__(self):
+        # //Method to return correct string annotation
         if self.visited:
             return "{} in {}, priority {} (visited)".format(self.name, self.country, self.priority)
         elif not self.visited:
             return "{} in {}, priority {}".format(self.name, self.country, self.priority)
-
-    def tog_visited(self):
-        if self.visited:
-            self.visited = False
-        elif not self.visited:
-            self.visited = True
