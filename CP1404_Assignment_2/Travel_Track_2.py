@@ -25,11 +25,14 @@ class Travel_Tracker(App):
     def make_widget(self):
         unvisited_places = 0
         for name in self.place_objects:
-            if not name['visited']:
-                unvisited_places += 1
             temp_but = Button(text=str(name), id=str(name))
             # temp_but.bind(on_press=lambda x: self.to_visited(name))
             temp_but.bind(on_press=lambda temp_but: self.toggle_visited(temp_but.text))
+            if not name['visited']:
+                unvisited_places += 1
+                temp_but.background_color = 0.0, 1.0, 1.0, 1.0
+            elif name['visited']:
+                temp_but.background_color = 0.5, 0.5, 0.5, 1.0
             self.root.ids.location_box.add_widget(temp_but)
             self.current_widgets.append(temp_but)
         self.root.ids.places_label.text = "Places to visit {}".format(unvisited_places)
@@ -38,9 +41,9 @@ class Travel_Tracker(App):
         # //Toggle switch for sort_types in switch_types
         switch_types = ["Visited", "Priority"]
         switch_val = switch_types.index(str(self.root.ids.switch_button.text)) + 1
-        print(switch_val)
         switch_type = switch_types[switch_val] if switch_val < len(switch_types) \
             else switch_types[0]
+        print(switch_type)
         self.root.ids.switch_button.text = switch_type
         self.place_objects = self.collection.place_sort(switch_type)
         self.clear_widget()
@@ -48,9 +51,9 @@ class Travel_Tracker(App):
 
     def clear_inputs(self):
         # //Function to clear inputs, loop for ease of improvement
-        root_ids = ['name_input', 'country_input', 'priority_input']
-        for ids in root_ids:
-            self.root.ids.ids.text = ""
+        root_ids = [self.root.ids.name_input, self.root.ids.country_input, self.root.ids.priority_input]
+        for root in root_ids:
+            root.text = ""
 
     def add_place(self, name, country, priority):
         self.collection.add_place(name, country, priority)
@@ -70,7 +73,7 @@ class Travel_Tracker(App):
             if given_name == str(the_place):
                 the_place.tog_visited()
                 if the_place.visited:
-                    self.root.ids.visited_label.text = "You visited {}".format(the_place.name)
+                    self.root.ids.visited_label.text = "You visited {}. Great Travelling!".format(the_place.name)
                 elif not the_place.visited:
                     self.root.ids.visited_label.text = "You need to visit {}".format(the_place.name)
             self.clear_widget()

@@ -20,8 +20,7 @@ def sorting_algorithm(sorting_list):
     for value in sorted_list:
         for the_place in sorting_list:
             if value == the_place['priority']:
-                # print(sorting_list[sorting_list.index(the_place)])
-                sorted_list[list_index] = sorting_list[list_index]
+                sorted_list[list_index] = sorting_list[sorting_list.index(the_place)]
                 list_index += 1
     return sorted_list
 
@@ -44,6 +43,7 @@ class PlaceCollection:
         return self.list_places
 
     def place_sort(self, given_order):
+        print("Sort Fired")
         # // Switch order based on function argument
         # TODO: Stops working at high number of locations: Figure out later.
         if given_order == "Priority":
